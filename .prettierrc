@@ -5,8 +5,10 @@
   "semi": false,
   "arrowParens": "always",
   "singleAttributePerLine": true,
+  "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "singleQuote": false,
-  "printWidth": 100
+  "printWidth": 100,
+
 }

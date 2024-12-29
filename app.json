@@ -1,43 +1,58 @@
 {
-  "expo": {
-    "name": "meety",
-    "slug": "meety",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/images/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#8242d9"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/icon.png"
-    },
-    "plugins": ["expo-router"],
-    "experiments": {
-      "typedRoutes": true
-    },
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "e72c8c7b-fdb4-4044-a7da-0bb00a461bc0"
-      }
-    }
-  }
+	"expo": {
+		"name": "meety",
+		"slug": "meety",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/images/icon.png",
+		"scheme": "myapp",
+		"userInterfaceStyle": "automatic",
+		"newArchEnabled": true,
+		"ios": {
+			"supportsTablet": true
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/images/icon.png",
+				"backgroundColor": "#ffffff"
+			}
+		},
+		"web": {
+			"bundler": "metro",
+			"output": "static",
+			"favicon": "./assets/images/icon.png"
+		},
+		"plugins": [
+			"expo-router",
+			[
+				"expo-splash-screen",
+				{
+					"image": "./assets/images/splash-icon.png",
+					"resizeMode": "contain",
+					"backgroundColor": "#6960F7",
+					"enableFullScreenImage_legacy": true
+				}
+			],
+			[
+				"expo-font",
+				{
+					"fonts": [
+						"./assets/fonts/Rubik-Bold.ttf",
+						"./assets/fonts/Poppins-ExtraBold.ttf",
+						"./assets/fonts/Poppins-Medium.ttf",
+						"./assets/fonts/Poppins-Light.ttf",
+						"./assets/fonts/Poppins-Regular.ttf",
+						"./assets/fonts/Poppins-SemiBold.ttf"
+					]
+				}
+			]
+		],
+
+		"experiments": {
+			"typedRoutes": true
+		},
+		"eas": {
+			"projectId": "e72c8c7b-fdb4-4044-a7da-0bb00a461bc0"
+		}
+	}
 }
