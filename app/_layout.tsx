@@ -2,6 +2,8 @@ import React, { useEffect } from "react"
 import "./globals.css"
 import { SplashScreen, Stack } from "expo-router"
 import { useFonts } from "expo-font"
+import store from "@/store/store"
+import { Provider } from "react-redux"
 
 const RootLayout = () => {
 	const [fontsLoaded] = useFonts({
@@ -22,17 +24,19 @@ const RootLayout = () => {
 	}, [fontsLoaded])
 
 	return (
-		<Stack screenOptions={{ headerShown: false }}>
-			<Stack.Screen name="authHome" />
-			<Stack.Screen
-				name="signIn"
-				options={{ presentation: "fullScreenModal" }}
-			/>
-			<Stack.Screen
-				name="signUp"
-				options={{ presentation: "fullScreenModal" }}
-			/>
-		</Stack>
+		<Provider store={store}>
+			<Stack screenOptions={{ headerShown: false }}>
+				<Stack.Screen name="authHome" />
+				<Stack.Screen
+					name="login"
+					options={{ presentation: "fullScreenModal" }}
+				/>
+				<Stack.Screen
+					name="signUp"
+					options={{ presentation: "fullScreenModal" }}
+				/>
+			</Stack>
+		</Provider>
 	)
 }
 export default RootLayout

@@ -1,11 +1,15 @@
 import authGuy from "@/assets/images/authGuy.png"
 import loginGuy from "@/assets/images/loginGuy.png"
+import signUpGuy from "@/assets/images/signUpGuy.png"
 import facebook from "@/assets/images/facebook.png"
-import apple from "@/assets/images/apple.png"
+import google from "@/assets/images/google.png"
+import back from "@/assets/images/back.png"
 
 export default {
 	authGuy,
 	loginGuy,
+	signUpGuy,
 	facebook,
-	apple
+	google,
+	back
 }
