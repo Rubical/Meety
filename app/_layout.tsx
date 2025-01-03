@@ -1,11 +1,13 @@
 import React, { useEffect } from "react"
 import "./globals.css"
-import { SplashScreen, Stack } from "expo-router"
+import { router, SplashScreen, Stack } from "expo-router"
 import { useFonts } from "expo-font"
-import store from "@/store/store"
+import { store } from "@/store/store"
 import { Provider } from "react-redux"
+import { useUser } from "@/hooks/useUser"
 
-const RootLayout = () => {
+const StackLayout = () => {
+	const { id } = useUser()
 	const [fontsLoaded] = useFonts({
 		"Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
 		"Poppins-ExtraBold": require("../assets/fonts/Poppins-ExtraBold.ttf"),
@@ -23,19 +25,33 @@ const RootLayout = () => {
 		}
 	}, [fontsLoaded])
 
+	useEffect(() => {
+		if (id) {
+			router.replace("/")
+		} else {
+			router.replace("/authHome")
+		}
+	}, [id])
+
+	return (
+		<Stack screenOptions={{ headerShown: false }}>
+			<Stack.Screen name="authHome" />
+			<Stack.Screen
+				name="signIn"
+				options={{ presentation: "fullScreenModal" }}
+			/>
+			<Stack.Screen
+				name="signUp"
+				options={{ presentation: "fullScreenModal" }}
+			/>
+		</Stack>
+	)
+}
+
+const RootLayout = () => {
 	return (
 		<Provider store={store}>
-			<Stack screenOptions={{ headerShown: false }}>
-				<Stack.Screen name="authHome" />
-				<Stack.Screen
-					name="login"
-					options={{ presentation: "fullScreenModal" }}
-				/>
-				<Stack.Screen
-					name="signUp"
-					options={{ presentation: "fullScreenModal" }}
-				/>
-			</Stack>
+			<StackLayout />
 		</Provider>
 	)
 }

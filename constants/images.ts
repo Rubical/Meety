@@ -3,13 +3,11 @@ import loginGuy from "@/assets/images/loginGuy.png"
 import signUpGuy from "@/assets/images/signUpGuy.png"
 import facebook from "@/assets/images/facebook.png"
 import google from "@/assets/images/google.png"
-import back from "@/assets/images/back.png"
 
 export default {
 	authGuy,
 	loginGuy,
 	signUpGuy,
 	facebook,
-	google,
-	back
+	google
 }

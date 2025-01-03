@@ -14,28 +14,37 @@ client.setEndpoint(config.endpoint!).setProject(config.projectId!).setPlatform(c
 
 export const account = new Account(client)
 
-export async function signUp({ email, password }: { email: string; password: string }) {
+export async function signUp(email: string, password: string) {
 	try {
 		const result = await account.create(ID.unique(), email, password)
-		console.log(result)
-	} catch (error) {
-		console.error(error)
+		if (!result) {
+			return false
+		}
+		const session = await account.createEmailPasswordSession(email, password)
+		if (session) {
+			return session
+		}
+	} catch (e) {
+		console.log(e)
+		return false
 	}
 }
 
-export async function login({ email, password }: { email: string; password: string }) {
+export async function signIn(email: string, password: string) {
 	try {
-		const result = await account.createEmailPasswordSession(email, password)
-		console.log(result)
-	} catch (error) {
-		console.error(error)
+		const session = await account.createEmailPasswordSession(email, password)
+		if (session) {
+			return session
+		}
+	} catch (e) {
+		return false
 	}
 }
 
-export async function logout() {
+export async function signOut() {
 	try {
 		await account.deleteSession("current")
-		console.log("Account logged out")
+		console.log("logged out")
 		return true
 	} catch (e) {
 		console.log(e)
@@ -43,7 +52,7 @@ export async function logout() {
 	}
 }
 
-export async function loginWithOAuth({ provider }: { provider: "google" | "facebook" }) {
+export async function loginWithOAuth(provider: "google" | "facebook") {
 	try {
 		const redirectUri = Linking.createURL("/")
 		const appwriteProvider = provider === "google" ? OAuthProvider.Google : OAuthProvider.Facebook
@@ -51,11 +60,11 @@ export async function loginWithOAuth({ provider }: { provider: "google" | "faceb
 		const response = await account.createOAuth2Token(appwriteProvider, redirectUri)
 
 		if (!response) {
-			throw new Error("Failed to login")
+			return false
 		}
 
 		const browserResult = await openAuthSessionAsync(response.toString(), redirectUri)
-		if (browserResult.type !== "success") throw new Error("Failed to login")
+		if (browserResult.type !== "success") return false
 
 		const url = new URL(browserResult.url)
 
@@ -63,14 +72,12 @@ export async function loginWithOAuth({ provider }: { provider: "google" | "faceb
 		const userId = url.searchParams.get("userId")?.toString()
 
 		if (!userId || !secret) {
-			throw new Error("Failed to login")
+			return false
 		}
 
 		const session = await account.createSession(userId, secret)
-
-		if (!session) throw new Error("Failed to create session")
-		console.log({ userId, secret, response })
-		return true
+		if (!session) return false
+		return session
 	} catch (e) {
 		console.log(e)
 		return false

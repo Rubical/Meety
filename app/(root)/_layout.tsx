@@ -1,9 +1,11 @@
 import React from "react"
 import { Redirect, Slot } from "expo-router"
+import { useUser } from "@/hooks/useUser"
 
 const AppLayout = () => {
-	if (true) {
-		return <Redirect href={"/authHome"} />
+	const { id } = useUser()
+	if (!id) {
+		return <Redirect href="/authHome" />
 	}
 	return <Slot />
 }

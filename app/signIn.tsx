@@ -2,11 +2,11 @@ import { Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } f
 import React, { useState } from "react"
 import images from "@/constants/images"
 import { Link, router } from "expo-router"
-import { loginWithOAuth, signUp } from "@/libs/appwrite"
+import { loginWithOAuth, signIn, signOut } from "@/libs/appwrite"
 import { useActions } from "@/hooks/useActions"
 import icons from "@/constants/icons"
 
-const SignUp = () => {
+const SignIn = () => {
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const { setUser } = useActions()
@@ -18,42 +18,30 @@ const SignUp = () => {
 		setPassword(text)
 	}
 
-	async function handleOAuthSignUp(provider: "google" | "facebook") {
+	async function handleOAuthSignIn(provider: "google" | "facebook") {
 		const session = await loginWithOAuth(provider)
 		if (session) {
 			setUser(session.$id)
 		}
 	}
 
-	async function handleSignUp() {
-		const emailTest = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
-		if (!emailTest) {
-			Alert.alert("Enter the valid email address")
-			return false
-		}
-
-		const passwordTest = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/.test(password)
-		if (!passwordTest) {
-			Alert.alert("Password should be at least 8 characters with both symbols and numbers")
-			return false
-		}
-		const result = await signUp(email, password)
-		if (result) {
-			setUser(result.$id)
-			console.log(result.$id)
+	async function handleSignIn() {
+		const session = await signIn(email, password)
+		if (session) {
+			setUser(session.$id)
 		} else {
-			Alert.alert("Oops. Email already exists!")
+			Alert.alert("Enter valid email and password!")
 		}
 	}
 
 	return (
-		<SafeAreaView className="bg-white h-full relative">
-			<View className="h-full flex">
+		<SafeAreaView className="bg-white h-full">
+			<View className="h-full flex relative p-8">
 				<TouchableOpacity
 					onPress={() => {
 						router.back()
 					}}
-					className="size-12 my-8 ml-8 z-10"
+					className="size-12"
 				>
 					<Image
 						source={icons.back}
@@ -61,12 +49,12 @@ const SignUp = () => {
 						className="size-12"
 					/>
 				</TouchableOpacity>
-				<Image
-					source={images.signUpGuy}
-					className="w-full pl-10 h-2/5 absolute top-0 right-0 z-5"
-					resizeMode="stretch"
-				/>
 
+				<Image
+					source={images.loginGuy}
+					className="w-full h-2/5"
+					resizeMode="contain"
+				/>
 				<View className="absolute px-10 bottom-8 left-0 right-0 flex items-center justify-center gap-1">
 					<View className="w-full p-4 flex justify-center align-center border-2 border-gray-500 rounded-xl mb-5">
 						<TextInput
@@ -77,7 +65,7 @@ const SignUp = () => {
 							placeholderTextColor="gray"
 						/>
 					</View>
-					<View className="w-full p-4 flex justify-center align-center border-2 border-gray-500 rounded-xl mb-8">
+					<View className="w-full p-4 flex justify-center align-center border-2 border-gray-500 rounded-xl mb-2">
 						<TextInput
 							value={password}
 							onChangeText={handlePasswordChange}
@@ -87,14 +75,21 @@ const SignUp = () => {
 						/>
 					</View>
 					<TouchableOpacity
-						onPress={handleSignUp}
-						className="w-full h-14 bg-primary-300 text-center flex justify-center items-center rounded-3xl mb-6"
+						onPress={signOut}
+						className="mb-8 self-end"
 					>
-						<Text className="text-white font-poppins-semibold text-xl">Sign up</Text>
+						<Text className="font-poppins-semibold">Forgot your password?</Text>
 					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={handleSignIn}
+						className="w-full h-14 bg-primary-300 text-center flex justify-center items-center rounded-3xl mb-8"
+					>
+						<Text className="text-white font-poppins-semibold text-xl">Sign in</Text>
+					</TouchableOpacity>
+
 					<View className="flex flex-row justify-center align-center gap-6 mb-14">
 						<TouchableOpacity
-							onPress={() => handleOAuthSignUp("google")}
+							onPress={() => handleOAuthSignIn("google")}
 							className="w-16 h-16 flex bg-white justify-center items-center rounded-full shadow-[0px_4px_8px_rgba(0,0,0,0.2),0px_2px_4px_rgba(0,0,255,0.4)]"
 						>
 							<Image
@@ -103,7 +98,7 @@ const SignUp = () => {
 							/>
 						</TouchableOpacity>
 						<TouchableOpacity
-							onPress={() => handleOAuthSignUp("facebook")}
+							onPress={() => handleOAuthSignIn("facebook")}
 							className="w-16 h-16 flex bg-white justify-center items-center rounded-full shadow-[0px_4px_8px_rgba(0,0,0,0.2),0px_2px_4px_rgba(0,0,255,0.4)]"
 						>
 							<Image
@@ -113,13 +108,13 @@ const SignUp = () => {
 						</TouchableOpacity>
 					</View>
 					<View className="flex flex-row items-center justify-center gap-1">
-						<Text className="font-poppins-semibold">You already have an account? </Text>
+						<Text className="font-poppins-semibold">Don't have an account? </Text>
 						<TouchableOpacity>
 							<Link
-								href={"/signIn"}
+								href={"/signUp"}
 								className="font-poppins-semibold text-primary-300"
 							>
-								Sign in
+								Sign up
 							</Link>
 						</TouchableOpacity>
 					</View>
@@ -128,4 +123,4 @@ const SignUp = () => {
 		</SafeAreaView>
 	)
 }
-export default SignUp
+export default SignIn
