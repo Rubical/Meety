@@ -1,15 +1,18 @@
 import { Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native"
 import React, { useState } from "react"
 import images from "@/constants/images"
-import { Link, router } from "expo-router"
-import { loginWithOAuth, signIn, signOut } from "@/libs/appwrite"
+import { router } from "expo-router"
+import { signIn, signInWithOAuth, signOut } from "@/libs/appwrite"
 import { useActions } from "@/hooks/useActions"
 import icons from "@/constants/icons"
+import Loader from "@/components/Loader"
+import { useUser } from "@/hooks/useUser"
 
 const SignIn = () => {
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
-	const { setUser } = useActions()
+	const { loading } = useUser()
+	const { setUser, setLoading } = useActions()
 
 	const handleEmailChange = (text: string) => {
 		setEmail(text)
@@ -19,40 +22,43 @@ const SignIn = () => {
 	}
 
 	async function handleOAuthSignIn(provider: "google" | "facebook") {
-		const session = await loginWithOAuth(provider)
+		setLoading(true)
+
+		const session = await signInWithOAuth(provider)
 		if (session) {
-			setUser(session.$id)
+			setUser({ id: session.userId })
+			setLoading(false)
+			router.replace("/")
 		}
 	}
 
 	async function handleSignIn() {
-		const session = await signIn(email, password)
-		if (session) {
-			setUser(session.$id)
-		} else {
-			Alert.alert("Enter valid email and password!")
+		try {
+			const session = await signIn(email, password)
+			if (session) {
+				setUser({ id: session.userId })
+				console.log(session.userId)
+				router.replace("/")
+			} else {
+				Alert.alert("Enter valid email and password!")
+			}
+		} catch (error) {
+			Alert.alert("Sign in failed", "Please try again.")
+		} finally {
+			setLoading(false)
 		}
+	}
+
+	if (loading) {
+		return <Loader />
 	}
 
 	return (
 		<SafeAreaView className="bg-white h-full">
 			<View className="h-full flex relative p-8">
-				<TouchableOpacity
-					onPress={() => {
-						router.back()
-					}}
-					className="size-12"
-				>
-					<Image
-						source={icons.back}
-						resizeMode="contain"
-						className="size-12"
-					/>
-				</TouchableOpacity>
-
 				<Image
 					source={images.loginGuy}
-					className="w-full h-2/5"
+					className="w-full h-2/5 mt-5"
 					resizeMode="contain"
 				/>
 				<View className="absolute px-10 bottom-8 left-0 right-0 flex items-center justify-center gap-1">
@@ -93,7 +99,7 @@ const SignIn = () => {
 							className="w-16 h-16 flex bg-white justify-center items-center rounded-full shadow-[0px_4px_8px_rgba(0,0,0,0.2),0px_2px_4px_rgba(0,0,255,0.4)]"
 						>
 							<Image
-								source={images.google}
+								source={icons.google}
 								className="w-11 h-11"
 							/>
 						</TouchableOpacity>
@@ -102,20 +108,19 @@ const SignIn = () => {
 							className="w-16 h-16 flex bg-white justify-center items-center rounded-full shadow-[0px_4px_8px_rgba(0,0,0,0.2),0px_2px_4px_rgba(0,0,255,0.4)]"
 						>
 							<Image
-								source={images.facebook}
+								source={icons.facebook}
 								className="w-12 h-12"
 							/>
 						</TouchableOpacity>
 					</View>
 					<View className="flex flex-row items-center justify-center gap-1">
 						<Text className="font-poppins-semibold">Don't have an account? </Text>
-						<TouchableOpacity>
-							<Link
-								href={"/signUp"}
-								className="font-poppins-semibold text-primary-300"
-							>
-								Sign up
-							</Link>
+						<TouchableOpacity
+							onPress={() => {
+								router.replace("/signUp")
+							}}
+						>
+							<Text className="font-poppins-semibold text-primary-300">Sign up</Text>
 						</TouchableOpacity>
 					</View>
 				</View>

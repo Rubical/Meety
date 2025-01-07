@@ -1,28 +1,44 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-interface UserState {
-	id: string
-	country: string
+export interface UserState {
+	id?: string
+	name?: string
+	enrollment?: "introducing" | "onboarding"
+	email?: string
+	gender?: string
+	location?: string
+	age?: number
+	agePreference?: [number, number]
+	about?: string
+	interests?: string[]
+	education?: string
+	occupation?: string
+	livingIn?: string
+	matches?: {
+		id: string
+	}
 }
 
-const initialState: UserState = {
-	id: "",
-	country: ""
+const initialState: { user: UserState; loading: boolean } = {
+	user: {},
+	loading: false
 }
 
 export const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
-		setUser: (state, action) => {
-			state.id = action.payload
+		setUser: (state, action: PayloadAction<UserState>) => {
+			state.user = action.payload
 		},
 		clearUser: (state) => {
-			state.id = ""
-			state.country = ""
+			state.user = {}
+		},
+		setLoading: (state, action: PayloadAction<boolean>) => {
+			state.loading = action.payload
 		}
 	}
 })
 
-export const { setUser, clearUser } = userSlice.actions
+export const { setUser, clearUser, setLoading } = userSlice.actions
 export default userSlice.reducer

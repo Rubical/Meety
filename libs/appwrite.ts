@@ -10,9 +10,8 @@ export const config = {
 
 const client = new Client()
 
+const account = new Account(client)
 client.setEndpoint(config.endpoint!).setProject(config.projectId!).setPlatform(config.platform)
-
-export const account = new Account(client)
 
 export async function signUp(email: string, password: string) {
 	try {
@@ -21,9 +20,10 @@ export async function signUp(email: string, password: string) {
 			return false
 		}
 		const session = await account.createEmailPasswordSession(email, password)
-		if (session) {
-			return session
+		if (!session) {
+			return false
 		}
+		return session
 	} catch (e) {
 		console.log(e)
 		return false
@@ -33,26 +33,17 @@ export async function signUp(email: string, password: string) {
 export async function signIn(email: string, password: string) {
 	try {
 		const session = await account.createEmailPasswordSession(email, password)
-		if (session) {
-			return session
+		if (!session) {
+			return false
 		}
-	} catch (e) {
-		return false
-	}
-}
-
-export async function signOut() {
-	try {
-		await account.deleteSession("current")
-		console.log("logged out")
-		return true
+		return session
 	} catch (e) {
 		console.log(e)
 		return false
 	}
 }
 
-export async function loginWithOAuth(provider: "google" | "facebook") {
+export async function signInWithOAuth(provider: "google" | "facebook") {
 	try {
 		const redirectUri = Linking.createURL("/")
 		const appwriteProvider = provider === "google" ? OAuthProvider.Google : OAuthProvider.Facebook
@@ -77,7 +68,30 @@ export async function loginWithOAuth(provider: "google" | "facebook") {
 
 		const session = await account.createSession(userId, secret)
 		if (!session) return false
+		console.log(session)
 		return session
+	} catch (e) {
+		console.log(e)
+		return false
+	}
+}
+
+export async function signOut() {
+	try {
+		await account.deleteSession("current")
+		console.log("logged out")
+		return true
+	} catch (e) {
+		console.log(e)
+		return false
+	}
+}
+
+export async function getUser() {
+	try {
+		const result = await account.get()
+		if (!result) return false
+		return result
 	} catch (e) {
 		console.log(e)
 		return false

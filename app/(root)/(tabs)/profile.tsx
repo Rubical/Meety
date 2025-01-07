@@ -1,29 +1,29 @@
-import { Button, SafeAreaView, View } from "react-native"
+import { Button, SafeAreaView, ScrollView } from "react-native"
 import React from "react"
 import { signOut } from "@/libs/appwrite"
 import { useActions } from "@/hooks/useActions"
-import { useUser } from "@/hooks/useUser"
+import { router } from "expo-router"
 
 const Profile = () => {
 	const { clearUser } = useActions()
-	const { id } = useUser()
 
 	async function handleLogout() {
 		const result = await signOut()
 		if (result) {
 			clearUser()
+			router.replace("/authHome")
 		}
 	}
 
 	return (
-		<View>
-			<SafeAreaView>
+		<SafeAreaView className="bg-white h-full">
+			<ScrollView>
 				<Button
 					title={"Logout"}
 					onPress={handleLogout}
 				></Button>
-			</SafeAreaView>
-		</View>
+			</ScrollView>
+		</SafeAreaView>
 	)
 }
 export default Profile

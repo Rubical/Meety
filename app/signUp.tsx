@@ -1,15 +1,18 @@
 import { Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native"
 import React, { useState } from "react"
 import images from "@/constants/images"
-import { Link, router } from "expo-router"
-import { loginWithOAuth, signUp } from "@/libs/appwrite"
+import { router } from "expo-router"
+import { signInWithOAuth, signUp } from "@/libs/appwrite"
 import { useActions } from "@/hooks/useActions"
 import icons from "@/constants/icons"
+import { useUser } from "@/hooks/useUser"
+import Loader from "@/components/Loader"
 
 const SignUp = () => {
+	const { loading } = useUser()
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
-	const { setUser } = useActions()
+	const { setUser, setLoading } = useActions()
 
 	const handleEmailChange = (text: string) => {
 		setEmail(text)
@@ -19,9 +22,13 @@ const SignUp = () => {
 	}
 
 	async function handleOAuthSignUp(provider: "google" | "facebook") {
-		const session = await loginWithOAuth(provider)
+		setLoading(true)
+
+		const session = await signInWithOAuth(provider)
 		if (session) {
-			setUser(session.$id)
+			setUser({ id: session.userId })
+			setLoading(false)
+			router.replace("/introducing/introducing")
 		}
 	}
 
@@ -37,33 +44,35 @@ const SignUp = () => {
 			Alert.alert("Password should be at least 8 characters with both symbols and numbers")
 			return false
 		}
-		const result = await signUp(email, password)
-		if (result) {
-			setUser(result.$id)
-			console.log(result.$id)
-		} else {
-			Alert.alert("Oops. Email already exists!")
+		setLoading(true)
+		try {
+			const session = await signUp(email, password)
+			if (session) {
+				setUser({ id: session.userId })
+				while (router.canGoBack()) {
+					router.back()
+				}
+				router.replace("/introducing/introducing")
+			} else {
+				Alert.alert("Oops. Email already exists!")
+			}
+		} catch (error) {
+			Alert.alert("Sign up failed", "Please try again.")
+		} finally {
+			setLoading(false)
 		}
+	}
+
+	if (loading) {
+		return <Loader />
 	}
 
 	return (
 		<SafeAreaView className="bg-white h-full relative">
 			<View className="h-full flex">
-				<TouchableOpacity
-					onPress={() => {
-						router.back()
-					}}
-					className="size-12 my-8 ml-8 z-10"
-				>
-					<Image
-						source={icons.back}
-						resizeMode="contain"
-						className="size-12"
-					/>
-				</TouchableOpacity>
 				<Image
 					source={images.signUpGuy}
-					className="w-full pl-10 h-2/5 absolute top-0 right-0 z-5"
+					className="w-full pl-10 h-2/5"
 					resizeMode="stretch"
 				/>
 
@@ -98,7 +107,7 @@ const SignUp = () => {
 							className="w-16 h-16 flex bg-white justify-center items-center rounded-full shadow-[0px_4px_8px_rgba(0,0,0,0.2),0px_2px_4px_rgba(0,0,255,0.4)]"
 						>
 							<Image
-								source={images.google}
+								source={icons.google}
 								className="w-11 h-11"
 							/>
 						</TouchableOpacity>
@@ -107,20 +116,19 @@ const SignUp = () => {
 							className="w-16 h-16 flex bg-white justify-center items-center rounded-full shadow-[0px_4px_8px_rgba(0,0,0,0.2),0px_2px_4px_rgba(0,0,255,0.4)]"
 						>
 							<Image
-								source={images.facebook}
+								source={icons.facebook}
 								className="w-12 h-12"
 							/>
 						</TouchableOpacity>
 					</View>
 					<View className="flex flex-row items-center justify-center gap-1">
 						<Text className="font-poppins-semibold">You already have an account? </Text>
-						<TouchableOpacity>
-							<Link
-								href={"/signIn"}
-								className="font-poppins-semibold text-primary-300"
-							>
-								Sign in
-							</Link>
+						<TouchableOpacity
+							onPress={() => {
+								router.replace("/signIn")
+							}}
+						>
+							<Text className="font-poppins-semibold text-primary-300">Sign in</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
