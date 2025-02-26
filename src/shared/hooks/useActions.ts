@@ -1,4 +1,4 @@
-import { userSlice } from "@/store/user.slice"
+import { userSlice } from "@/src/shared/libs/user.slice"
 import { useDispatch } from "react-redux"
 import { bindActionCreators } from "redux"
 import { useMemo } from "react"

@@ -1,6 +1,6 @@
 import { Image, View } from "react-native"
 import React from "react"
-import icons from "@/constants/icons"
+import icons from "@/src/shared/constants/icons"
 
 const Pagination = ({ pages, currentPage }: { pages: number; currentPage: number }) => {
 	return (

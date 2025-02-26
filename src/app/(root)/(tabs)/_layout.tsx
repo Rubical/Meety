@@ -1,7 +1,7 @@
 import React from "react"
 import { Tabs } from "expo-router"
 import { Image, View } from "react-native"
-import icons from "@/constants/icons"
+import icons from "@/src/shared/constants/icons"
 
 const TabIcon = ({ focused, icon }: { focused: boolean; icon: any }) => (
 	<View className="flex-1 mt-3 flex flex-col items-center">

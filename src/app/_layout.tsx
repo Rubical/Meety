@@ -2,12 +2,12 @@ import React, { useEffect } from "react"
 import "./globals.css"
 import { router, SplashScreen, Stack } from "expo-router"
 import { useFonts } from "expo-font"
-import { store } from "@/store/store"
+import { store } from "@/src/shared/libs/store"
 import { Provider } from "react-redux"
 import { StatusBar } from "expo-status-bar"
-import { getUser } from "@/libs/appwrite"
-import { useUser } from "@/hooks/useUser"
-import { useActions } from "@/hooks/useActions"
+import { getUser } from "@/src/shared/libs/appwrite"
+import { useUser } from "@/src/shared/hooks/useUser"
+import { useActions } from "@/src/shared/hooks/useActions"
 
 SplashScreen.preventAutoHideAsync()
 

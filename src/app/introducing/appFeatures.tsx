@@ -1,7 +1,7 @@
 import { Image, SafeAreaView, Text, TouchableOpacity, View } from "react-native"
 import React from "react"
 import { router } from "expo-router"
-import images from "@/constants/images"
+import images from "@/src/shared/constants/images"
 
 const AppFeatures = () => {
 	return (

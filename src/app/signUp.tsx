@@ -1,12 +1,12 @@
 import { Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native"
 import React, { useState } from "react"
-import images from "@/constants/images"
+import images from "@/src/shared/constants/images"
 import { router } from "expo-router"
-import { signInWithOAuth, signUp } from "@/libs/appwrite"
-import { useActions } from "@/hooks/useActions"
-import icons from "@/constants/icons"
-import { useUser } from "@/hooks/useUser"
-import Loader from "@/components/Loader"
+import { signInWithOAuth, signUp } from "@/src/shared/libs/appwrite"
+import { useActions } from "@/src/shared/hooks/useActions"
+import icons from "@/src/shared/constants/icons"
+import { useUser } from "@/src/shared/hooks/useUser"
+import Loader from "@/src/shared/ui/Loader"
 
 const SignUp = () => {
 	const { loading } = useUser()

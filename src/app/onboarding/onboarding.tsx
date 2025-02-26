@@ -1,7 +1,7 @@
 import { SafeAreaView, Text, TextInput, View } from "react-native"
 import React from "react"
-import { useUser } from "@/hooks/useUser"
-import { useActions } from "@/hooks/useActions"
+import { useUser } from "@/src/shared/hooks/useUser"
+import { useActions } from "@/src/shared/hooks/useActions"
 
 const Onboarding = () => {
 	const user = useUser()

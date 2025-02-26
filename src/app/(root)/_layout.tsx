@@ -1,6 +1,6 @@
 import React from "react"
 import { Redirect, Slot } from "expo-router"
-import { useUser } from "@/hooks/useUser"
+import { useUser } from "@/src/shared/hooks/useUser"
 import { ActivityIndicator, SafeAreaView } from "react-native"
 
 const AppLayout = () => {

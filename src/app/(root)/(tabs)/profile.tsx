@@ -1,7 +1,7 @@
 import { Button, SafeAreaView, ScrollView } from "react-native"
 import React from "react"
-import { signOut } from "@/libs/appwrite"
-import { useActions } from "@/hooks/useActions"
+import { signOut } from "@/src/shared/libs/appwrite"
+import { useActions } from "@/src/shared/hooks/useActions"
 import { router } from "expo-router"
 
 const Profile = () => {

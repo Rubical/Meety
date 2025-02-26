@@ -1,6 +1,6 @@
 import { Image, Platform, SafeAreaView, Text, TouchableOpacity, View } from "react-native"
 import React from "react"
-import images from "@/constants/images"
+import images from "@/src/shared/constants/images"
 import { router } from "expo-router"
 
 const AuthHome = () => {
